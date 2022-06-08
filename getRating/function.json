@@ -1,0 +1,29 @@
+{
+  "scriptFile": "__init__.py",
+  "bindings": [
+    {
+      "authLevel": "function",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "get",
+        "post"
+      ]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "$return"
+    },
+    {
+      "name": "doc",
+      "type": "cosmosDB",
+      "direction": "in",
+      "databaseName": "DBEquipe3",
+      "collectionName": "ContainerDBEquipe3",
+      "sqlQuery": "SELECT c.id, c.userId, c.productId, c.rating, c.locationName, c.timestamp, c.userNotes FROM c where c.id = {id}",
+      "connectionStringSetting": "CosmosDBConnectionString"
+  }
+  ]
+}
