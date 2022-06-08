@@ -4,37 +4,39 @@ import requests
 
 import azure.functions as func
 
-
 def main(req: func.HttpRequest) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
-
 
     try:
         req_body = req.get_json()
         user_id = req_body.get('userId')
         product_id = req_body.get('productId')
+
+        validator = {
+            "not found": []
+        }
+
+        if not user_id or not find_user:
+            validator["not found"].append({'param': 'user_id'})
+        
+        if not product_id or not find_product:
+            validator["not found"].append({'param': 'product_id'}) 
+
     except ValueError:
         pass
-    else:
-        name = req_body.get('name')
 
     if user_id and product_id:
-        return func.HttpResponse(f"Hello, {user_id} and {product_id}. This HTTP triggered function executed successfully.")
+        return func.HttpResponse('user and product found', status_code=200)
     else:
-        response = requests.get('https://serverlessohapi.azurewebsites.net/api/GetProducts').json()
-        logging.info(response)
         return func.HttpResponse(
-             'teste ok',
-             status_code=200
+             json.dumps(validator),
+             status_code=400
         )
 
+def find_user(user_id):
+    response = requests.get(f'https://serverlessohapi.azurewebsites.net/api/GetUser?userId={user_id}')
+    return response.status_code == 200
 
-
-
-
-
-def validate_user(user_id):
-    pass
-
-def validate_product(product_id):
-    pass
+def find_product(product_id):
+    response = requests.get(f'https://serverlessohapi.azurewebsites.net/api/GetProduct?productId={product_id}')
+    return response.status_code == 200
