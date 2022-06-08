@@ -12,6 +12,15 @@
       ]
     },
     {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "doc",
+      "databaseName": "DBEquipe3",
+      "collectionName": "ContainerDBEquipe3",
+      "createIfNotExists": "true",
+      "connectionStringSetting": "CosmosDBConnectionString"
+    },
+    {
       "type": "http",
       "direction": "out",
       "name": "$return"

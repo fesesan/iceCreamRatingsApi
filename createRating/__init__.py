@@ -5,7 +5,7 @@ import uuid
 
 import azure.functions as func
 
-def main(req: func.HttpRequest) -> func.HttpResponse:
+def main(req: func.HttpRequest,  doc: func.Out[func.Document]) -> func.HttpResponse:
     logging.info('Python HTTP trigger function processed a request.')
 
     user = None
@@ -41,12 +41,14 @@ def main(req: func.HttpRequest) -> func.HttpResponse:
         "userId": user,
         "productId": product,
         "timestamp": "2018-05-21 21:27:47Z",
-        "locationName": "Sample ice cream shop",
+        "locationName": "teste felipe",
         "rating": 5,
         "userNotes": "I love the subtle notes of orange in this ice cream!"
     }
 
     if user_id and product_id:
+
+        doc.set(func.Document.from_json(json.dumps(payload_response)))
         return func.HttpResponse(json.dumps(payload_response), status_code=200)
     else:
         return func.HttpResponse(
