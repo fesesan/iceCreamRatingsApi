@@ -2,9 +2,7 @@ import json
 import logging
 import requests
 import uuid
-
-from time import gmtime, strftime
-
+from  datetime import datetime
 import azure.functions as func
 
 def main(req: func.HttpRequest,  doc: func.Out[func.Document]) -> func.HttpResponse:
@@ -13,11 +11,16 @@ def main(req: func.HttpRequest,  doc: func.Out[func.Document]) -> func.HttpRespo
     user = None
     product = None
     rating = None
+    locationName = None
+    userNotes = None
+
     try:
         req_body = req.get_json()
         user_id = req_body.get('userId')
         product_id = req_body.get('productId')
         rating = req_body.get('rating')
+        locationName = req_body.get('locationName')
+        userNotes = req_body.get('userNotes')
 
         validator = {
             "errors": []
@@ -56,13 +59,13 @@ def main(req: func.HttpRequest,  doc: func.Out[func.Document]) -> func.HttpRespo
             "id": str(uuid.uuid4()),
             "userId": user,
             "productId": product,
-            "timestamp": strftime("%Y-%m-%d %H:%M:%S", gmtime()),
-            "locationName": "Sample ice cream shop",
+            "timestamp": datetime.utcnow().strftime('%Y-%m-%d %H:%M:%SZ'),
+            "locationName": locationName,
             "rating": str(rating),
-            "userNotes": "I love the subtle notes of orange in this ice cream!"
+            "userNotes": userNotes
         }
         doc.set(func.Document.from_json(json.dumps(payload_response)))
-        return func.HttpResponse(json.dumps(payload_response), status_code=200)
+        return func.HttpResponse(json.dumps(payload_response, indent=True), status_code=200)
     else:
         print(validator)
         return func.HttpResponse(
@@ -71,7 +74,6 @@ def main(req: func.HttpRequest,  doc: func.Out[func.Document]) -> func.HttpRespo
         )
 
 def validate_rating_range(rating):
-    print('valor rating ' + str(rating))   
     return rating in [0,1,2,3,4,5]
 
 

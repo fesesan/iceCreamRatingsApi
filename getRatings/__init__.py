@@ -23,4 +23,4 @@ def main(req: func.HttpRequest, doc: func.DocumentList) -> func.HttpResponse:
                 "userNotes": d['userNotes']
             }
             ratings.append(payload_response)
-        return func.HttpResponse(json.dumps(ratings), status_code=200)
+        return func.HttpResponse(json.dumps(ratings, indent=True), status_code=200)
