@@ -20,4 +20,4 @@ def main(req: func.HttpRequest, doc: func.DocumentList) -> func.HttpResponse:
             "rating": doc[0]['rating'],
             "userNotes": doc[0]['userNotes']
         }
-        return func.HttpResponse(json.dumps(payload_response), status_code=200)
+        return func.HttpResponse(json.dumps(payload_response, indent=True), status_code=200)
